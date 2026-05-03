@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎮 Feria de Logros - Typing Challenge</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .screen {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #00d4ff;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+      font-size: 2.2rem;
+    }
+
+    h2 {
+      text-align: center;
+      margin: 20px 0;
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #e0e0ff;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid rgba(0, 212, 255, 0.4);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.2);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #00d4ff, #0099cc);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 10px 0;
+      box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.secondary {
+      background: linear-gradient(135deg, #6c757d, #495057);
+    }
+
+    button.danger {
+      background: linear-gradient(135deg, #ff4757, #ff3838);
+    }
+
+    .toggle-form {
+      text-align: center;
+      margin-top: 15px;
+      color: #aaa;
+    }
+
+    .toggle-form a {
+      color: #00d4ff;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .toggle-form a:hover {
+      text-decoration: underline;
+    }
+
+    .error-msg {
+      color: #ff6b6b;
+      text-align: center;
+      margin: 10px 0;
+      min-height: 20px;
+      font-size: 14px;
+    }
+
+    /* Menu Styles */
+    .difficulty-selector {
+      display: flex;
+      gap: 10px;
+      margin: 20px 0;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .difficulty-btn {
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 600;
+      min-width: 100px;
+    }
+
+    .difficulty-btn.easy {
+      background: linear-gradient(135deg, #2ed573, #26af61);
+    }
+
+    .difficulty-btn.medium {
+      background: linear-gradient(135deg, #ffa502, #e69500);
+    }
+
+    .difficulty-btn.hard {
+      background: linear-gradient(135deg, #ff4757, #ff3838);
+    }
+
+    .difficulty-btn.active {
+      box-shadow: 0 0 0 3px white, 0 0 15px currentColor;
+      transform: scale(1.05);
+    }
+
+    .levels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin: 25px 0;
+    }
+
+    .level-card {
+      background: rgba(0, 212, 255, 0.15);
+      border: 2px solid rgba(0, 212, 255, 0.4);
+      border-radius: 15px;
+      padding: 20px 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .level-card:hover {
+      transform: translateY(-5px);
+      border-color: #00d4ff;
+      box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
+    }
+
+    .level-card.locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: rgba(100, 100, 100, 0.2);
+    }
+
+    .level-card.locked:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .level-number {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #00d4ff;
+      margin-bottom: 5px;
+    }
+
+    .level-name {
+      font-size: 0.9rem;
+      color: #e0e0ff;
+    }
+
+    .level-card.locked::after {
+      content: "🔒";
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .user-info {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .user-info span {
+      color: #00d4ff;
+      font-weight: bold;
+    }
+
+    /* Game Styles */
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 20px;
+      font-size: 1.1rem;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .lives {
+      display: flex;
+      gap: 5px;
+    }
+
+    .life {
+      width: 25px;
+      height: 25px;
+      background: #ff4757;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      animation: pulse 2s infinite;
+    }
+
+    .life.lost {
+      background: #555;
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .timer {
+      background: rgba(255, 165, 2, 0.2);
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      color: #ffa502;
+    }
+
+    .word-display {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 30px 0;
+      min-height: 80px;
+      align-items: center;
+    }
+
+    .letter-box {
+      width: 50px;
+      height: 60px;
+      background: #00bcd4; /* celeste */
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: white; /* letras blancas */
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-transform: uppercase;
+    }
+
+    .letter-box.correct {
+      background: #2ed573; /* verde */
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(46, 213, 115, 0.5);
+    }
+
+    .letter-box.incorrect {
+      background: #ff4757; /* rojo */
+      animation: shake 0.3s;
+      box-shadow: 0 0 15px rgba(255, 71, 87, 0.5);
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .input-area {
+      text-align: center;
+      margin: 25px 0;
+    }
+
+    #userInput {
+      width: 80%;
+      max-width: 500px;
+      padding: 15px;
+      font-size: 1.3rem;
+      text-align: center;
+      text-transform: lowercase;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00d4ff, #0099cc);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .message {
+      text-align: center;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 10px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .message.success {
+      background: rgba(46, 213, 115, 0.2);
+      color: #2ed573;
+      display: block;
+    }
+
+    .message.error {
+      background: rgba(255, 71, 87, 0.2);
+      color: #ff6b6b;
+      display: block;
+    }
+
+    .game-over {
+      text-align: center;
+      padding: 30px;
+    }
+
+    .final-score {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #00d4ff;
+      margin: 20px 0;
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-group button {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 600px) {
+      .screen {
+        padding: 20px;
+        margin: 10px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .letter-box {
+        width: 40px;
+        height: 50px;
+        font-size: 1.4rem;
+      }
+      
+      .stats {
+        font-size: 0.95rem;
+        gap: 10px;
+      }
+      
+      #userInput {
+        width: 100%;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Pantalla de Login -->
+  <div id="loginScreen" class="screen active">
+    <h1>🎮 Feria de Logros</h1>
+    <h2>Iniciar Sesión</h2>
+    <div class="error-msg" id="loginError"></div>
+    <div class="form-group">
+      <label for="loginEmail">Correo Electrónico</label>
+      <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Contraseña</label>
+      <input type="password" id="loginPassword" placeholder="••••••••" required>
+    </div>
+    <button id="loginBtn">Iniciar Sesión</button>
+    <button id="showRegisterBtn" class="secondary">Crear Cuenta</button>
+    
+    <div class="toggle-form">
+      ¿No tienes cuenta? <a id="toggleToRegister">Regístrate aquí</a>
+    </div>
+  </div>
+
+  <!-- Pantalla de Registro -->
+  <div id="registerScreen" class="screen">
+    <h1>🎮 Feria de Logros</h1>
+    <h2>Crear Cuenta</h2>
+    <div class="error-msg" id="registerError"></div>
+    <div class="form-group">
+      <label for="registerName">Nombre de Usuario</label>
+      <input type="text" id="registerName" placeholder="Tu nombre" required>
+    </div>
+    <div class="form-group">
+      <label for="registerEmail">Correo Electrónico</label>
+      <input type="email" id="registerEmail" placeholder="tu@email.com" required>
+    </div>
+    <div class="form-group">
+      <label for="registerPassword">Contraseña</label>
+      <input type="password" id="registerPassword" placeholder="•••••••• (mín. 6 caracteres)" required minlength="6">
+    </div>
+    <button id="registerBtn">Registrarse</button>
+    <button id="showLoginBtn" class="secondary">Volver al Login</button>
+    
+    <div class="toggle-form">
+      ¿Ya tienes cuenta? <a id="toggleToLogin">Inicia sesión aquí</a>
+    </div>
+  </div>
+
+  <!-- Menú Principal -->
+  <div id="menuScreen" class="screen">
+    <div class="user-info">
+      👤 Bienvenido, <span id="userName">Jugador</span> | 🏆 Puntos: <span id="userScore">0</span>
+    </div>
+    
+    <h2>Selecciona Dificultad</h2>
+    <div class="difficulty-selector">
+      <button class="difficulty-btn easy active" data-difficulty="easy">Fácil</button>
+      <button class="difficulty-btn medium" data-difficulty="medium">Medio</button>
+      <button class="difficulty-btn hard" data-difficulty="hard">Difícil</button>
+    </div>
+    
+    <h2>Niveles Disponibles</h2>
+    <div class="levels-grid" id="levelsGrid">
+      <!-- Los niveles se generan con JS -->
+    </div>
+    
+    <div class="btn-group">
+      <button id="logoutBtn" class="danger">Cerrar Sesión</button>
+    </div>
+  </div>
+
+  <!-- Pantalla de Juego -->
+  <div id="gameScreen" class="screen">
+    <div class="game-header">
+      <div class="stats">
+        <div class="stat">📊 Nivel: <span id="currentLevel">1</span></div>
+        <div class="stat">⚡ Dificultad: <span id="currentDifficulty">Fácil</span></div>
+      </div>
+      <div class="stats">
+        <div class="lives" id="livesContainer">
+          <div class="life">❤️</div>
+          <div class="life">❤️</div>
+          <div class="life">❤️</div>
+        </div>
+        <div class="timer" id="timer">⏱️ 10s</div>
+      </div>
+    </div>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <div class="word-display" id="wordDisplay">
+      <!-- Las letras se generan con JS -->
+    </div>
+    
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Escribe la palabra..." autocomplete="off" autofocus>
+    </div>
+    
+    <div class="message" id="gameMessage"></div>
+    
+    <div class="btn-group">
+      <button id="backToMenuBtn" class="secondary">Menú</button>
+      <button id="skipWordBtn">Saltar Palabra (-1 vida)</button>
+    </div>
+  </div>
+
+  <!-- Pantalla de Game Over -->
+  <div id="gameOverScreen" class="screen">
+    <div class="game-over">
+      <h1>🎮 ¡Juego Terminado!</h1>
+      <div class="final-score" id="finalScore">0</div>
+      <p id="gameOverMessage">¡Buen intento! Sigue practicando para mejorar.</p>
+      
+      <div class="btn-group">
+        <button id="retryBtn">🔄 Reintentar Nivel</button>
+        <button id="menuFromGameOverBtn" class="secondary">🏠 Menú Principal</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pantalla de Nivel Completado -->
+  <div id="levelCompleteScreen" class="screen">
+    <div class="game-over">
+      <h1>🎉 ¡Nivel Completado!</h1>
+      <div class="final-score" id="levelScore">+50</div>
+      <p id="levelCompleteMessage">¡Excelente trabajo! Desbloqueaste el siguiente nivel.</p>
+      
+      <div class="btn-group">
+        <button id="nextLevelBtn">▶️ Siguiente Nivel</button>
+        <button id="menuFromCompleteBtn" class="secondary">🏠 Menú Principal</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      updateDoc,
+      increment
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBnGjmryXAor3JdDccoos05dwFUaCzMknw",
+      authDomain: "feriadelogros-76c28.firebaseapp.com",
+      projectId: "feriadelogros-76c28",
+      storageBucket: "feriadelogros-76c28.firebasestorage.app",
+      messagingSenderId: "67226093375",
+      appId: "1:67226093375:web:d8984db5f3d6f5d66a758a",
+      measurementId: "G-SBL9K7NEV7"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // ============ CONFIGURACIÓN DEL JUEGO ============
+    const wordsByLevel = {
+      1: ["sol", "luz", "mar", "pan", "red", "rio", "pez", "flor", "luna", "casa"],
+      2: ["arbol", "playa", "cielo", "verde", "dulce", "rapido", "suave", "fuerte", "brillo", "nieve"],
+      3: ["montaña", "estrella", "ventana", "jardin", "camino", "puente", "nube", "fuego", "tierra", "aire"],
+      4: ["elefante", "mariposa", "guitarra", "ventana", "caminar", "saltar", "correr", "bailar", "cantar", "pintar"],
+      5: ["biblioteca", "universidad", "tecnologia", "educacion", "conocimiento", "aprendizaje", "creatividad", "imaginacion", "inspiracion", "motivacion"],
+      6: ["extraordinario", "maravilloso", "fantastico", "espectacular", "increible", "asombroso", "impresionante", "sobresaliente", "excepcional", "phenomenal"],
+      7: ["constelacion", "arquitectura", "bibliografia", "democracia", "ecosistema", "fotografia", "geometria", "historia", "literatura", "matematica"],
+      8: ["electromagnetismo", "internacionalizacion", "microscopico", "neurociencia", "organizacion", "participacion", "responsabilidad", "sostenibilidad", "transformacion", "vulnerabilidad"],
+      9: ["anticonstitucionalmente", "electroencefalografista", "otorrinolaringologo", "psicofarmacologia", "telecomunicaciones", "ultrasonografia", "videovigilancia", "webconferencia", "xenofobia", "zoologia"],
+      10: ["supercalifragilisticoespialidoso", "hipopotomonstrosesquipedaliofobia", "paradigmáticamente", "desoxirribonucleico", "electrocardiograma", "inconstitucionalidad", "microscópicamente", "neurotransmisor", "psicoanálisis", "teletransportación"]
+    };
+
+    const difficultySettings = {
+      easy: { timePerLetter: 1.5, lives: 3, pointsPerWord: 10 },
+      medium: { timePerLetter: 1.0, lives: 3, pointsPerWord: 20 },
+      hard: { timePerLetter: 0.7, lives: 2, pointsPerWord: 35 }
+    };
+
+    // ============ VARIABLES GLOBALES ============
+    let currentUser = null;
+    let userData = { name: "Jugador", score: 0, unlockedLevels: [1], completedLevels: {} };
+    let currentDifficulty = "easy";
+    let currentLevel = 1;
+    let currentWord = "";
+    let lives = 3;
+    let score = 0;
+    let timer = null;
+    let timeLeft = 10;
+    let gameActive = false;
+    let lettersCorrect = 0;
+
+    // ============ ELEMENTOS DOM ============
+    const screens = {
+      login: document.getElementById('loginScreen'),
+      register: document.getElementById('registerScreen'),
+      menu: document.getElementById('menuScreen'),
+      game: document.getElementById('gameScreen'),
+      gameOver: document.getElementById('gameOverScreen'),
+      levelComplete: document.getElementById('levelCompleteScreen')
+    };
+
+    // ============ FUNCIONES DE AUTENTICACIÓN ============
+    function showScreen(screenName) {
+      Object.values(screens).forEach(screen => screen.classList.remove('active'));
+      screens[screenName].classList.add('active');
+    }
+
+    async function registerUser() {
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const errorEl = document.getElementById('registerError');
+      
+      errorEl.textContent = "";
+      
+      if (!name || !email || !password) {
+        errorEl.textContent = "Por favor completa todos los campos";
+        return;
+      }
+      
+      if (password.length < 6) {
+        errorEl.textContent = "La contraseña debe tener al menos 6 caracteres";
+        return;
+      }
+      
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        
+        // Actualizar perfil con nombre
+        await updateProfile(user, { displayName: name });
+        
+        // Guardar datos iniciales en Firestore
+        await setDoc(doc(db, "users", user.uid), {
+          name: name,
+          email: email,
+          score: 0,
+          unlockedLevels: [1],
+          completedLevels: {},
+          createdAt: new Date()
+        });
+        
+        showScreen('menu');
+      } catch (error) {
+        console.error("Error en registro:", error);
+        errorEl.textContent = getFirebaseErrorMessage(error.code);
+      }
+    }
+
+    async function loginUser() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const errorEl = document.getElementById('loginError');
+      
+      errorEl.textContent = "";
+      
+      if (!email || !password) {
+        errorEl.textContent = "Por favor ingresa correo y contraseña";
+        return;
+      }
+      
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        // onAuthStateChanged se encargará de cargar los datos
+      } catch (error) {
+        console.error("Error en login:", error);
+        errorEl.textContent = getFirebaseErrorMessage(error.code);
+      }
+    }
+
+    async function logoutUser() {
+      try {
+        await signOut(auth);
+        showScreen('login');
+      } catch (error) {
+        console.error("Error en logout:", error);
+      }
+    }
+
+    function getFirebaseErrorMessage(code) {
+      const messages = {
+        "auth/invalid-email": "Correo electrónico inválido",
+        "auth/user-disabled": "Esta cuenta ha sido deshabilitada",
+        "auth/user-not-found": "No existe una cuenta con este correo",
+        "auth/wrong-password": "Contraseña incorrecta",
+        "auth/email-already-in-use": "Este correo ya está registrado",
+        "auth/weak-password": "La contraseña es muy débil",
+        "auth/operation-not-allowed": "Operación no permitida",
+        "auth/network-request-failed": "Error de conexión. Verifica tu internet"
+      };
+      return messages[code] || "Ocurrió un error. Intenta de nuevo.";
+    }
+
+    async function loadUserData(user) {
+      try {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists()) {
+          userData = docSnap.data();
+        } else {
+          // Crear datos por defecto si no existen
+          userData = {
+            name: user.displayName || "Jugador",
+            email: user.email,
+            score: 0,
+            unlockedLevels: [1],
+            completedLevels: {}
+          };
+          await setDoc(docRef, userData);
+        }
+        
+        // Actualizar UI
+        document.getElementById('userName').textContent = userData.name;
+        document.getElementById('userScore').textContent = userData.score;
+        renderLevelsGrid();
+        
+      } catch (error) {
+        console.error("Error cargando datos:", error);
+      }
+    }
+
+    async function saveUserProgress() {
+      if (!currentUser) return;
+      
+      try {
+        const updates = {
+          score: userData.score,
+          unlockedLevels: userData.unlockedLevels
+        };
+        
+        if (userData.completedLevels[currentLevel]) {
+          updates[`completedLevels.${currentLevel}`] = userData.completedLevels[currentLevel];
+        }
+        
+        await updateDoc(doc(db, "users", currentUser.uid), updates);
+      } catch (error) {
+        console.error("Error guardando progreso:", error);
+      }
+    }
+
+    // ============ LÓGICA DEL MENÚ ============
+    function renderLevelsGrid() {
+      const grid = document.getElementById('levelsGrid');
+      grid.innerHTML = "";
+      
+      for (let i = 1; i <= 10; i++) {
+        const isUnlocked = userData.unlockedLevels.includes(i);
+        const isCompleted = userData.completedLevels[i];
+        
+        const card = document.createElement('div');
+        card.className = `level-card ${isUnlocked ? '' : 'locked'}`;
+        card.dataset.level = i;
+        
+        if (isUnlocked) {
+          card.innerHTML = `
+            <div class="level-number">${i}</div>
+            <div class="level-name">${isCompleted ? '✓ Completado' : 'Jugar'}</div>
+          `;
+          card.addEventListener('click', () => startLevel(i));
+        } else {
+          card.innerHTML = `
+            <div class="level-number">${i}</div>
+            <div class="level-name">Bloqueado</div>
+          `;
+        }
+        
+        grid.appendChild(card);
+      }
+    }
+
+    function selectDifficulty(difficulty) {
+      currentDifficulty = difficulty;
+      
+      // Actualizar botones
+      document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.difficulty === difficulty) {
+          btn.classList.add('active');
+        }
+      });
+      
+      // Actualizar texto en juego
+      document.getElementById('currentDifficulty').textContent = 
+        difficulty === 'easy' ? 'Fácil' : difficulty === 'medium' ? 'Medio' : 'Difícil';
+      
+      // Actualizar vidas en UI
+      updateLivesDisplay(difficultySettings[difficulty].lives);
+    }
+
+    function updateLivesDisplay(maxLives) {
+      const container = document.getElementById('livesContainer');
+      container.innerHTML = "";
+      for (let i = 0; i < maxLives; i++) {
+        const life = document.createElement('div');
+        life.className = 'life';
+        life.textContent = '❤️';
+        container.appendChild(life);
+      }
+    }
+
+    // ============ LÓGICA DEL JUEGO ============
+    function startLevel(level) {
+      if (!userData.unlockedLevels.includes(level)) {
+        showMessage("🔒 Este nivel está bloqueado. Completa el nivel anterior.", "error");
+        return;
+      }
+      
+      currentLevel = level;
+      lives = difficultySettings[currentDifficulty].lives;
+      score = 0;
+      
+      // Actualizar UI
+      document.getElementById('currentLevel').textContent = level;
+      document.getElementById('userScore').textContent = userData.score;
+      updateLivesDisplay(lives);
+      
+      // Generar nueva palabra
+      generateWord();
+      
+      // Mostrar pantalla de juego
+      showScreen('game');
+      document.getElementById('userInput').focus();
+      
+      gameActive = true;
+    }
+
+    function generateWord() {
+      const words = wordsByLevel[currentLevel];
+      currentWord = words[Math.floor(Math.random() * words.length)].toLowerCase();
+      
+      // Renderizar cajas de letras
+      const display = document.getElementById('wordDisplay');
+      display.innerHTML = "";
+      
+      currentWord.split('').forEach((letter, index) => {
+        const box = document.createElement('div');
+        box.className = 'letter-box';
+        box.id = `letter-${index}`;
+        box.textContent = letter.toUpperCase();
+        display.appendChild(box);
+      });
+      
+      // Configurar timer
+      const settings = difficultySettings[currentDifficulty];
+      timeLeft = Math.round(currentWord.length * settings.timePerLetter);
+      updateTimerDisplay();
+      
+      // Iniciar contador
+      if (timer) clearInterval(timer);
+      timer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        updateProgressBar();
+        
+        if (timeLeft <= 0) {
+          handleWordTimeout();
+        }
+      }, 1000);
+      
+      // Resetear input
+      document.getElementById('userInput').value = "";
+      lettersCorrect = 0;
+      hideMessage();
+    }
+
+    function updateTimerDisplay() {
+      document.getElementById('timer').textContent = `⏱️ ${timeLeft}s`;
+    }
+
+    function updateProgressBar() {
+      const settings = difficultySettings[currentDifficulty];
+      const totalTime = Math.round(currentWord.length * settings.timePerLetter);
+      const percent = ((totalTime - timeLeft) / totalTime) * 100;
+      document.getElementById('progressFill').style.width = `${percent}%`;
+    }
+
+    function validateInput() {
+      if (!gameActive) return;
+      
+      const input = document.getElementById('userInput').value.toLowerCase().trim();
+      
+      // Validar letra por letra en tiempo real
+      if (input.length <= currentWord.length) {
+        for (let i = 0; i < input.length; i++) {
+          const box = document.getElementById(`letter-${i}`);
+          if (input[i] === currentWord[i]) {
+            if (!box.classList.contains('correct')) {
+              box.classList.add('correct');
+              box.classList.remove('incorrect');
+              lettersCorrect++;
+            }
+          } else {
+            box.classList.add('incorrect');
+            box.classList.remove('correct');
+          }
+        }
+        
+        // Limpiar cajas no escritas aún
+        for (let i = input.length; i < currentWord.length; i++) {
+          const box = document.getElementById(`letter-${i}`);
+          box.classList.remove('correct', 'incorrect');
+        }
+      }
+      
+      // Verificar palabra completa
+      if (input === currentWord) {
+        handleWordSuccess();
+      }
+    }
+
+    function handleWordSuccess() {
+      clearInterval(timer);
+      gameActive = false;
+      
+      // Marcar todas como correctas
+      currentWord.split('').forEach((_, index) => {
+        const box = document.getElementById(`letter-${index}`);
+        box.classList.add('correct');
+      });
+      
+      // Sumar puntos
+      const points = difficultySettings[currentDifficulty].pointsPerWord;
+      score += points;
+      userData.score += points;
+      document.getElementById('userScore').textContent = userData.score;
+      
+      showMessage(`✅ ¡Correcto! +${points} puntos`, "success");
+      
+      // Guardar progreso y avanzar
+      setTimeout(() => {
+        if (currentLevel <= 10 && !userData.completedLevels[currentLevel]) {
+          userData.completedLevels[currentLevel] = true;
+          
+          // Desbloquear siguiente nivel
+          if (currentLevel < 10 && !userData.unlockedLevels.includes(currentLevel + 1)) {
+            userData.unlockedLevels.push(currentLevel + 1);
+          }
+          
+          saveUserProgress();
+          showLevelComplete(points);
+        } else {
+          // Reintentar mismo nivel
+          generateWord();
+          gameActive = true;
+        }
+      }, 1500);
+    }
+
+    function handleWordTimeout() {
+      clearInterval(timer);
+      gameActive = false;
+      
+      showMessage("⏰ ¡Tiempo agotado!", "error");
+      loseLife();
+    }
+
+    function loseLife() {
+      lives--;
+      
+      // Actualizar UI de vidas
+      const lifeElements = document.querySelectorAll('.life');
+      if (lifeElements[lives]) {
+        lifeElements[lives].classList.add('lost');
+      }
+      
+      if (lives <= 0) {
+        gameOver();
+      } else {
+        // Reintentar misma palabra
+        setTimeout(() => {
+          generateWord();
+          gameActive = true;
+        }, 1500);
+      }
+    }
+
+    function skipWord() {
+      if (!gameActive || lives <= 1) return;
+      
+      clearInterval(timer);
+      gameActive = false;
+      loseLife(); // Ya maneja el reintento o game over
+      showMessage("⏭️ Palabra saltada (-1 vida)", "error");
+    }
+
+    function gameOver() {
+      showScreen('gameOver');
+      document.getElementById('finalScore').textContent = score;
+      
+      const message = score > 50 
+        ? "¡Muy bien! Tienes buen potencial." 
+        : score > 20 
+          ? "¡Sigue practicando para mejorar!" 
+          : "No te rindas, ¡la práctica hace al maestro!";
+      
+      document.getElementById('gameOverMessage').textContent = message;
+    }
+
+    function showLevelComplete(pointsEarned) {
+      showScreen('levelComplete');
+      document.getElementById('levelScore').textContent = `+${pointsEarned}`;
+      
+      const nextLevel = currentLevel + 1;
+      const message = nextLevel <= 10 
+        ? `¡Desbloqueaste el Nivel ${nextLevel}!` 
+        : "🏆 ¡Felicidades! Completaste todos los niveles.";
+      
+      document.getElementById('levelCompleteMessage').textContent = message;
+    }
+
+    function showMessage(text, type) {
+      const msg = document.getElementById('gameMessage');
+      msg.textContent = text;
+      msg.className = `message ${type}`;
+    }
+
+    function hideMessage() {
+      document.getElementById('gameMessage').className = 'message';
+    }
+
+    function retryLevel() {
+      startLevel(currentLevel);
+    }
+
+    function goToMenu() {
+      showScreen('menu');
+      renderLevelsGrid();
+    }
+
+    function goToNextLevel() {
+      if (currentLevel < 10) {
+        startLevel(currentLevel + 1);
+      } else {
+        goToMenu();
+      }
+    }
+
+    // ============ EVENT LISTENERS ============
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle entre login/registro
+      document.getElementById('toggleToRegister').addEventListener('click', () => {
+        document.getElementById('registerError').textContent = "";
+        showScreen('register');
+      });
+      
+      document.getElementById('toggleToLogin').addEventListener('click', () => {
+        document.getElementById('loginError').textContent = "";
+        showScreen('login');
+      });
+      
+      document.getElementById('showRegisterBtn').addEventListener('click', () => {
+        document.getElementById('registerError').textContent = "";
+        showScreen('register');
+      });
+      
+      document.getElementById('showLoginBtn').addEventListener('click', () => {
+        document.getElementById('loginError').textContent = "";
+        showScreen('login');
+      });
+      
+      // Botones de autenticación
+      document.getElementById('registerBtn').addEventListener('click', registerUser);
+      document.getElementById('loginBtn').addEventListener('click', loginUser);
+      document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+      
+      // Selector de dificultad
+      document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          selectDifficulty(e.currentTarget.dataset.difficulty);
+        });
+      });
+      
+      // Controles del juego
+      document.getElementById('userInput').addEventListener('input', validateInput);
+      document.getElementById('userInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') validateInput();
+      });
+      
+      document.getElementById('skipWordBtn').addEventListener('click', skipWord);
+      document.getElementById('backToMenuBtn').addEventListener('click', goToMenu);
+      document.getElementById('retryBtn').addEventListener('click', retryLevel);
+      document.getElementById('menuFromGameOverBtn').addEventListener('click', goToMenu);
+      document.getElementById('nextLevelBtn').addEventListener('click', goToNextLevel);
+      document.getElementById('menuFromCompleteBtn').addEventListener('click', goToMenu);
+      
+      // Auth state observer
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          await loadUserData(user);
+          showScreen('menu');
+        } else {
+          currentUser = null;
+          showScreen('login');
+        }
+      });
+      
+      // Permitir Enter en campos de login/registro
+      document.getElementById('loginPassword').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') loginUser();
+      });
+      document.getElementById('registerPassword').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') registerUser();
+      });
+    });
+
+    // Prevenir submit por defecto en formularios
+    document.querySelectorAll('form').forEach(form => {
+      form.addEventListener('submit', (e) => e.preventDefault());
+    });
+  </script>
+</body>
+</html>
